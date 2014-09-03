@@ -5,7 +5,9 @@ FED2
 
 ##Best Practices:
 ###Algemeen
-Altijd goed doen
+* Altijd goed doen
+* Geen fouten
+* Mooi code
 
 ###Html
 Veel structuur in alles, altijd, alles

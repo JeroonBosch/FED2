@@ -1,4 +1,4 @@
-#Front End Development 2 CMD
+#CMD: FED2 v Jeroen Bosch
 
 ##Best Practices:
 ###Javascript

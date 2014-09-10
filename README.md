@@ -16,3 +16,4 @@ Alles moet mooi
 * Veel testen, debuggen
 * Overzichtelijke structuur
 * Commentariseren waar nodig
+* Namespace mag niet veel voorkomende 'var' naam zijn (net als andere globale shit)

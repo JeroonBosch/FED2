@@ -4,16 +4,15 @@ FED2
 #Front End Development 2 CMD
 
 ##Best Practices:
-###Algemeen
-* Altijd goed doen
-* Geen fouten
-* Mooi code
 
 ###Html
-Veel structuur in alles, altijd, alles
+Puur voor structuur
 
 ###Css
-is moooi
+Alles moet mooi
 
 ###Javascript
-veel functies, weinig variablene
+* Duidelijke en logische naamgeving (van variabelen, objecten, functies)
+* Veel testen, debuggen
+* Overzichtelijke structuur
+* Commentariseren waar nodig

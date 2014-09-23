@@ -16,7 +16,8 @@ main
 	padding: 10px;
 }
 
-section {
+section 
+{
 	margin: 6px;
 }
 
@@ -40,19 +41,27 @@ body > header
 	border-bottom:1px solid #CCC;
 }
 
-nav ul {
+nav ul 
+{
 	list-style-type: none;
 	margin-left: 18px;
 }
 
-nav li {
+nav li 
+{
 	display: inline-block;
 	font-family: Verdana, Geneva, sans-serif;
 }
 
-li a {
+li a 
+{
 	color: #badbad;
 	font-size: 20px;
 	margin-right: 5px;
 	margin-left: 5px;
+}
+
+p 
+{
+	margin-bottom: 10px;
 }

@@ -1,1 +1,58 @@
-#niks
+* {
+	margin: 0;
+	padding: 0;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section
+{
+	display: block;
+}
+
+main
+{
+	margin-top: 40px;
+	background: #262626;
+	color: #badbad;
+	padding: 10px;
+}
+
+section {
+	margin: 6px;
+}
+
+article, em, figure, h1, h2, h3, p, img
+{
+	margin: 4px;
+	margin-bottom: 6px;
+    font-family: Verdana, Geneva, sans-serif
+}
+
+body > header
+{
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: #929292;
+	margin: 0px auto;
+	padding: 10px;
+	height: 30px;
+	width: 100%;
+	border-bottom:1px solid #CCC;
+}
+
+nav ul {
+	list-style-type: none;
+	margin-left: 18px;
+}
+
+nav li {
+	display: inline-block;
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+li a {
+	color: #badbad;
+	font-size: 20px;
+	margin-right: 5px;
+	margin-left: 5px;
+}

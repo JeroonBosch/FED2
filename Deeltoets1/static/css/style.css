@@ -10,15 +10,17 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 main
 {
-	margin-top: 40px;
+	margin-top: 10px;
 	background: #262626;
 	color: #badbad;
 	padding: 10px;
 }
 
-section 
+main > section 
 {
 	margin: 6px;
+	padding-top: 50px;
+	display: none;
 }
 
 article, em, figure, h1, h2, h3, p, img
@@ -64,4 +66,10 @@ li a
 p 
 {
 	margin-bottom: 10px;
+}
+
+
+.active
+{
+	display: block;
 }

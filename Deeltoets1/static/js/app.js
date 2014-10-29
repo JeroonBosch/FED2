@@ -1,93 +1,198 @@
-var Dt1 = Dt1||{}; //namespace
+var favMovies = favMovies||{}; //namespace
 
 (function() { //self-invoking anonymous function
 
-	Dt1.controller = {
+    var myRequest = new XMLHttpRequest();
+    var movieData;
+    //var myReponse;
+
+	favMovies.controller = { //controllers
 		init : function (){
-			Dt1.router.init();
-            Dt1.section.init();
+			favMovies.router.init(); //initialize routie
+            favMovies.httpReq.init(); //data opvragen
+            favMovies.section.init(); //initialize transparency -> render
+            favMovies.swipe.init();
 		}
 	};
 
 
-	Dt1.router = {
+	favMovies.router = {
         init: function () {
-            routie({
-                about: function () {
-                    Dt1.section.toggle('about');
-                    console.log("about"); //this gets called when hash == #users
+            //document.getElementsByClassName("movieTitle").onclick = function() {favMovies.router.showDetails(this.innerHTML)};
+
+            routie({ 
+                "about": function () {
+                    favMovies.section.toggle('about');
+                    console.log("about"); //this gets called when hash == #about
                 },
-                movies: function () {
-                    Dt1.section.toggle('movies');
-                    console.log("movies"); //this gets called when hash == #users
+                "movies/id/?:name": function (name) {
+                    favMovies.section.toggle('detail');
+                    console.log("detail"); //this gets called when hash == #movies/id/name
+                },
+                "movies/genre/?:genre": function (genre) {
+                     favMovies.section.toggle('loading');
+                    // Delay ingevoegd om spinner te laten zien.
+                    setTimeout(function() {
+                        favMovies.section.toggle('movies');
+                        favMovies.section.movies(genre);
+                        console.log("movies/genre: " + genre);
+                    }, 2000);
                 }
+            });
+        },
+
+        showDetails: function (element) {
+
+            parent.location.hash = "movies/id/" + element;
+
+            console.log(element);
+
+            var detailData = JSON.parse(localStorage.getItem('moviedb'));
+
+            var detailData = 
+                _.filter(detailData, function (data) {
+                    /*var escapedUrl = data.title.replace(/ /g,"-").toLowerCase();
+                    console.log(escapedUrl);*/
+                    if (element === data.title) {
+                        console.log("swag");
+                        return data;
+                    };
+                });
+
+            console.log(detailData);
+
+            _.map(detailData, function (movie) {
+                movie.reviews = _.reduce(movie.reviews, function (totalScore, review) {
+                    return totalScore + review.score;
+                }, 0) / _.size(movie.reviews);
+            });
+
+            favMovies.pageContent.movieDetail = detailData;
+            favMovies.section.detail();
+        }
+    };
+
+    //swipeEffect
+    favMovies.swipe = {
+        init: function() {
+            var element = document.getElementById('detail');
+            var hammertime = Hammer(element).on("swiperight", function(event) {
+                document.getElementById('movieClick').click();
             });
         }
     };
 
-    Dt1.content = {
+    //Content rendered by favMovies.section
+    favMovies.pageContent = { //titel, releaseDate, etc. verwijzen naar HTML 'data-bind'
         about : {
             titel: "About this app",
-            //description: "Cities fall but they are rebuilt. heroes die but they are remembered. the man likes to play chess; let's get him some rocks. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. bruce... i'm god. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all. rehabilitated? well, now let me see. you know, i don't have any idea what that means. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. rehabilitated? well, now let me see. you know, i don't have any idea what that means. cities fall but they are rebuilt. heroes die but they are remembered. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all. /n I did the same thing to gandhi, he didn't eat for three weeks. bruce... i'm god. cities fall but they are rebuilt. heroes die but they are remembered. i once heard a wise man say there are no perfect men. only perfect intentions. cities fall but they are rebuilt. heroes die but they are remembered. boxing is about respect. getting it for yourself, and taking it away from the other guy. well, what is it today? more spelunking? /n let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. bruce... i'm god. well, what is it today? more spelunking? it only took me six days. same time it took the lord to make the world. i did the same thing to gandhi, he didn't eat for three weeks. Let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. boxing is about respect. getting it for yourself, and taking it away from the other guy. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. you measure yourself by the people who measure themselves by you. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. you measure yourself by the people who measure themselves by you. you measure yourself by the people who measure themselves by you. /n that tall drink of water with the silver spoon up his ass. i once heard a wise man say there are no perfect men. only perfect intentions. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. boxing is about respect. getting it for yourself, and taking it away from the other guy. That tall drink of water with the silver spoon up his ass. well, what is it today? more spelunking? i now issue a new commandment: thou shalt do the dance. let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. i did the same thing to gandhi, he didn't eat for three weeks. the man likes to play chess; let's get him some rocks. i now issue a new commandment: thou shalt do the dance. i now issue a new commandment: thou shalt do the dance. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. i don't think they tried to market it to the billionaire, spelunking, base-jumping crowd. that tall drink of water with the silver spoon up his ass. it only took me six days. same time it took the lord to make the world."
-            paragraaf1: "Cities fall but they are rebuilt. heroes die but they are remembered. the man likes to play chess; let's get him some rocks. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. bruce... i'm god. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all. rehabilitated? well, now let me see. you know, i don't have any idea what that means. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. rehabilitated? well, now let me see. you know, i don't have any idea what that means. cities fall but they are rebuilt. heroes die but they are remembered. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all. /n I did the same thing to gandhi, he didn't eat for three weeks. bruce... i'm god. cities fall but they are rebuilt. heroes die but they are remembered. i once heard a wise man say there are no perfect men. only perfect intentions. cities fall but they are rebuilt. heroes die but they are remembered. boxing is about respect. getting it for yourself, and taking it away from the other guy. well, what is it today? more spelunking? /n let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. bruce... i'm god. well, what is it today? more spelunking? it only took me six days. same time it took the lord to make the world. i did the same thing to gandhi, he didn't eat for three weeks. Let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. boxing is about respect. getting it for yourself, and taking it away from the other guy. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. you measure yourself by the people who measure themselves by you. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. you measure yourself by the people who measure themselves by you. you measure yourself by the people who measure themselves by you. /n that tall drink of water with the silver spoon up his ass. i once heard a wise man say there are no perfect men. only perfect intentions. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. boxing is about respect. getting it for yourself, and taking it away from the other guy. That tall drink of water with the silver spoon up his ass. well, what is it today? more spelunking? i now issue a new commandment: thou shalt do the dance. let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. i did the same thing to gandhi, he didn't eat for three weeks. the man likes to play chess; let's get him some rocks. i now issue a new commandment: thou shalt do the dance. i now issue a new commandment: thou shalt do the dance. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. i don't think they tried to market it to the billionaire, spelunking, base-jumping crowd. that tall drink of water with the silver spoon up his ass. it only took me six days. same time it took the lord to make the world.",
-            paragraaf2: "I did the same thing to gandhi, he didn't eat for three weeks. bruce... i'm god. cities fall but they are rebuilt. heroes die but they are remembered. i once heard a wise man say there are no perfect men. only perfect intentions. cities fall but they are rebuilt. heroes die but they are remembered. boxing is about respect. getting it for yourself, and taking it away from the other guy. well, what is it today? more spelunking? /n let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. bruce... i'm god. well, what is it today? more spelunking? it only took me six days. same time it took the lord to make the world. i did the same thing to gandhi, he didn't eat for three weeks. Let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. boxing is about respect. getting it for yourself, and taking it away from the other guy. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. you measure yourself by the people who measure themselves by you. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. you measure yourself by the people who measure themselves by you. you measure yourself by the people who measure themselves by you. /n that tall drink of water with the silver spoon up his ass. i once heard a wise man say there are no perfect men. only perfect intentions. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. boxing is about respect. getting it for yourself, and taking it away from the other guy. That tall drink of water with the silver spoon up his ass. well, what is it today? more spelunking? i now issue a new commandment: thou shalt do the dance. let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. i did the same thing to gandhi, he didn't eat for three weeks. the man likes to play chess; let's get him some rocks. i now issue a new commandment: thou shalt do the dance. i now issue a new commandment: thou shalt do the dance. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. i don't think they tried to market it to the billionaire, spelunking, base-jumping crowd. that tall drink of water with the silver spoon up his ass. it only took me six days. same time it took the lord to make the world.",
-            paragraaf3: "let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. bruce... i'm god. well, what is it today? more spelunking? it only took me six days. same time it took the lord to make the world. i did the same thing to gandhi, he didn't eat for three weeks. Let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. boxing is about respect. getting it for yourself, and taking it away from the other guy. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. you measure yourself by the people who measure themselves by you. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. you measure yourself by the people who measure themselves by you. you measure yourself by the people who measure themselves by you. /n that tall drink of water with the silver spoon up his ass. i once heard a wise man say there are no perfect men. only perfect intentions. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. boxing is about respect. getting it for yourself, and taking it away from the other guy. That tall drink of water with the silver spoon up his ass. well, what is it today? more spelunking? i now issue a new commandment: thou shalt do the dance. let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. i did the same thing to gandhi, he didn't eat for three weeks. the man likes to play chess; let's get him some rocks. i now issue a new commandment: thou shalt do the dance. i now issue a new commandment: thou shalt do the dance. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. i don't think they tried to market it to the billionaire, spelunking, base-jumping crowd. that tall drink of water with the silver spoon up his ass. it only took me six days. same time it took the lord to make the world.",
-            paragraaf4: "that tall drink of water with the silver spoon up his ass. i once heard a wise man say there are no perfect men. only perfect intentions. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. boxing is about respect. getting it for yourself, and taking it away from the other guy. That tall drink of water with the silver spoon up his ass. well, what is it today? more spelunking? i now issue a new commandment: thou shalt do the dance. let me tell you something my friend. hope is a dangerous thing. hope can drive a man insane. i did the same thing to gandhi, he didn't eat for three weeks. the man likes to play chess; let's get him some rocks. i now issue a new commandment: thou shalt do the dance. i now issue a new commandment: thou shalt do the dance. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. i don't think they tried to market it to the billionaire, spelunking, base-jumping crowd. that tall drink of water with the silver spoon up his ass. it only took me six days. same time it took the lord to make the world."
+            paragraaf1: "This app shows some movies with some random details for shits and giggles.",
+            paragraaf2: "Click on things to do things so you may see that things sometimes work.",
+            link: "Like here!"
          },
 
-        movies : [{
-            titel: "Shawshank Redemption",
-            releaseDate: "14 October 1994",
-            description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-            cover: "static/images/shawshank-redemption.jpg"
-        }, {
-            titel: "The Godfather",
-            releaseDate: "24 March 1972",
-            description: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
-            cover: "static/images/the-godfather.jpg"
-        }, {
-            titel: "Pulp Fiction",
-            releaseDate: "14 October 1994",
-            description: "The lives of two mob hit men, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
-            cover: "static/images/pulp-fiction.jpg"
-        }, {
-            titel: "The Dark Knight",
-            releaseDate: "18 July 2008",
-            description: "When Batman, Gordon and Harvey Dent launch an assault on the mob, they let the clown out of the box, the Joker, bent on turning Gotham on itself and bringing any heroes down to his level.",
-            cover: "static/images/the-dark-knight.jpg"
-        }],
+        movies : [
+        ],
+
+        movieDetail : [
+        ],
 
         directives: {
             cover: {
                 src: function () {
-                    return this.cover;
+                    return this.cover; //verwijst naar URL in de favMovies.content.movies.cover
                 }
             }
-        }
+        },
     };
 
-    Dt1.section = {
+    favMovies.section = {
+
         init: function () {
-            Dt1.section.about();
-            Dt1.section.movies();
+            this.about();
+            this.movies("none");
+            this.detail();
         },
+
         about: function () {
-            Transparency.render(document.getElementById("about"), Dt1.content.about);
+            Transparency.render(document.getElementById("about"), favMovies.pageContent.about); //rendert de HTML section 'about'
+            favMovies.section.toggle('about');
         },
-        movies: function () {
-            Transparency.render(document.getElementById("movies"), Dt1.content.movies, Dt1.content.directives);
+
+        movies: function (filter) {
+            //document.getElementById("paginatitel").innerHTML = "Favorite movies";
+            var filteredData = JSON.parse(localStorage.getItem('moviedb'));
+            if(filter == "" || filter == "All") {
+                //nothing
+            } else if(filter) {
+                filteredData = _.filter(filteredData, function(movie) {
+                    return _.contains(movie.genres, filter);
+                });
+            };
+
+            var el = document.getElementsByClassName("movieTitle");
+            console.log("el: " + el.length);
+            for (var i=0;i<el.length; i++) {
+                el[i].onclick = function() {favMovies.router.showDetails(this.innerHTML)};
+            }
+
+            Transparency.render(document.getElementById('movieArticle'), filteredData, favMovies.pageContent.directives); 
         },
+
+        detail: function () {
+            Transparency.render(document.getElementById("movieDetail"), favMovies.pageContent.movieDetail, favMovies.pageContent.directives);
+        },
+
         toggle: function (section) {
             var sections = document.querySelectorAll('section');
 
             for (i = 0; i < sections.length; i++) {
                 sections[i].classList.remove('active');
+                sections[i].classList.add('inactive');
             }
 
-            document.getElementById(section).classList.add('active');
+            document.getElementById(section).classList.remove('inactive');
+            document.getElementById(section).classList.add('active'); //voegt een .active class aan de sections toe, wanneer deze geselecteerd is
         }
     };
 
-    Dt1.controller.init();
+    favMovies.httpReq = {
+        init: function () {
+            myRequest.onreadystatechange = function()
+            {
+                if (myRequest.readyState==4 && myRequest.status==200)
+                {
+                    movieData = JSON.parse(myRequest.responseText); //krijg response array met objecten, moet movies vervangen
+                    localStorage.setItem('moviedb', myRequest.responseText);
+                }
+            }
 
+            if (JSON.parse(localStorage.getItem('moviedb')) != null) { //als er al movie data is
+                movieData = JSON.parse(localStorage.getItem('moviedb')) //dan gebruik dit
+                console.log("DEBUG: Data gevonden.");
+            } else {
+                myRequest.open("GET", "http://dennistel.nl/movies", true); //anders, haal op
+                myRequest.send();
+                console.log("DEBUG: Data opgehaald.");
+            }
+           
+            _.map(movieData, function (movie) {
+                movie.reviews = _.reduce(movie.reviews, function (totalScore, review) {
+                    return totalScore + review.score;
+                }, 0) / _.size(movie.reviews);
+            });
+
+            _.map(movieData, function (movie) {
+                movie.genres = movie.genres.toString();
+            });
+
+            console.log(movieData); //after: de review gemiddelde berekenen
+            favMovies.pageContent.movies = movieData;
+        }
+    }
+
+    /*favMovies.filter = {
+    }*/
+
+    favMovies.controller.init(); //uitvoeren van de controller, om ook daadwerkelijk iets te doen
 })();

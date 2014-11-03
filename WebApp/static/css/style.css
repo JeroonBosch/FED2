@@ -111,23 +111,37 @@ section a {
 .inactive
 {
   display: none;
+  animation: fadeIn 1.5s ease-in-out;
+  -webkit-animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 
 .active
 {
 	display: block;
-  animation: fadeIn .8s ease-in-out;
+  animation: fadeIn 1.5s ease-in-out;
+  -webkit-animation: fadeIn 1.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-  0% {
+  from {
     opacity: 0;
   }
-  100% {
+  to {
     opacity: 1;
   }
 }
+
+
 
 
 

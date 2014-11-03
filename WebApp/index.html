@@ -24,33 +24,15 @@
 			</section>
 
 			<section id="about">
-				<header>
-					<h1 data-bind="titel"></h1>
-				</header>
+				<!--h1 data-bind="titel"></h1-->
 				<p data-bind="paragraaf1"></p>
 				<p data-bind="paragraaf2"></p>
 				<a href="#movies/genre/All" data-bind="link"></a>
 			</section>
 
 			<section id="movies">
-				<h1 data-bind="paginatitel">Favourite movies</h1>	
-				<article id="movieArticle">
-					<header>
-						<h1 data-bind="title" class="movieTitle"></h1>
-						<em>Release Date: <time data-bind="release_date"></time></em>
-					</header>
-
-					<figure>
-						<img data-bind="cover" src="" alt="Film cover">
-					</figure>
-
-					<p data-bind="description"></p>
-
-					<!--a href="#" data-bind="meerInfo" class="moreInfo">More information</a-->
-				</article>	
-
-				<footer>
-					<h1>Genre filter</h1>
+				<footer id="genres">
+					<!--h1>Genre filter</h1-->
 					<ul>
 			            <li><a href="#movies/genre/All">All</a>
 			            </li>
@@ -68,6 +50,23 @@
 			            </li>
 		        	</ul>
 				</footer>
+
+				<!--h1 data-bind="paginatitel">Favourite movies</h1-->	
+				<article id="movieArticle">
+					<div id="flexWrapper">
+						<header>
+							<h1 data-bind="title" class="movieTitle"></h1>
+							<em>Release Date: <time data-bind="release_date"></time></em>
+						</header>
+
+						<figure>
+							<img data-bind="cover" src="" alt="Film cover">
+						</figure>
+
+						<p data-bind="description"></p>
+					</div>
+					<!--a href="#" data-bind="meerInfo" class="moreInfo">More information</a-->
+				</article>	
 			</section>
 
 			<section  id="detail">
@@ -96,7 +95,7 @@
 		<header>
 			<nav>
 				<ul>
-					<li><a href="#about">About</a></li>
+					<li><a id="aboutClick" href="#about">About</a></li>
 					<li><a id="movieClick" href="#movies/genre/All">Movies</a></li>
 				</ul>
 			</nav>

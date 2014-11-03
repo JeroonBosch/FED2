@@ -24,6 +24,8 @@ var favMovies = favMovies||{}; //namespace
                 "about": function () {
                     favMovies.section.toggle('about');
                     console.log("about"); //this gets called when hash == #about
+                    document.getElementById("aboutClick").classList.add('curNav');
+                    document.getElementById("movieClick").classList.remove('curNav');
                 },
                 "movies/id/?:name": function (name) {
                     favMovies.section.toggle('detail');
@@ -36,7 +38,15 @@ var favMovies = favMovies||{}; //namespace
                         favMovies.section.toggle('movies');
                         favMovies.section.movies(genre);
                         console.log("movies/genre: " + genre);
-                    }, 2000);
+                        document.getElementById("movieClick").classList.add('curNav');
+                        document.getElementById("aboutClick").classList.remove('curNav');
+                    }, 1200);
+                },
+                "*": function () { //default
+                    favMovies.section.toggle('about');
+                    console.log("about"); //this gets called when hash == #about
+                    document.getElementById("aboutClick").classList.add('curNav');
+                    document.getElementById("movieClick").classList.remove('curNav');
                 }
             });
         },
@@ -116,7 +126,7 @@ var favMovies = favMovies||{}; //namespace
 
         about: function () {
             Transparency.render(document.getElementById("about"), favMovies.pageContent.about); //rendert de HTML section 'about'
-            favMovies.section.toggle('about');
+            //favMovies.section.toggle('about');
         },
 
         movies: function (filter) {
@@ -153,6 +163,8 @@ var favMovies = favMovies||{}; //namespace
 
             document.getElementById(section).classList.remove('inactive');
             document.getElementById(section).classList.add('active'); //voegt een .active class aan de sections toe, wanneer deze geselecteerd is
+
+            //document.getElementById(section).className += ' active';
         }
     };
 
@@ -188,11 +200,9 @@ var favMovies = favMovies||{}; //namespace
 
             console.log(movieData); //after: de review gemiddelde berekenen
             favMovies.pageContent.movies = movieData;
+            favMovies.section.movies();
         }
     }
-
-    /*favMovies.filter = {
-    }*/
 
     favMovies.controller.init(); //uitvoeren van de controller, om ook daadwerkelijk iets te doen
 })();

@@ -7,3 +7,7 @@
 * Overzichtelijke structuur
 * Commentariseren waar nodig
 * Namespace mag niet veel voorkomende 'var' naam zijn (net als andere globale shit)
+
+
+
+John: Ziet er prachtig uit, goede verhalen enzo. Lekker kort. 
